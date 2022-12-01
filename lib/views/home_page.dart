@@ -24,6 +24,8 @@ import 'package:motopickupdriver/views/help_center.dart';
 import 'package:motopickupdriver/views/rateClient.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../utils/services.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -207,9 +209,18 @@ class _HomePageState extends State<HomePage> {
                                                   drive: controller.userBase!,
                                                   distance: (distance / 1000)
                                                       .toStringAsFixed(2),
-                                                  accepte: () {
+                                                  accepte: () async {
+                                              String fcm=       documentSnapshot[
+                                                              "customer_fcm"];
+                                                      sendNotification([fcm],"confirmation order??","order accepted");
                                                     controller.isOnOrder = true;
                                                     controller.isWithOrder=true;
+                                                    String fcm_driver=await SessionManager().get('driver_fcm');
+                                                    FirebaseFirestore.instance.collection('orders').doc(  documentSnapshot[
+                                                              "order_id"]).update(({
+                                                                "driver_fcm":fcm_driver,
+
+                                                              }));
                                                     FirebaseFirestore.instance
                                                         .collection('drivers')
                                                         .doc(controller
@@ -607,6 +618,17 @@ class _HomePageState extends State<HomePage> {
                                                                     .startCourse =
                                                                 true;
                                                             controller.update();
+
+                                                               String customer_fcm=       documentSnapshot[
+                                                              "customer_fcm"];
+                                                               String driver_fcm=       documentSnapshot[
+                                                              "driver_fcm"];
+                                                              
+
+                                                              
+                                                                sendNotification([customer_fcm,driver_fcm],"voyage","Voyage va commencer dans 30 min",whenDate:DateTime.tryParse( documentSnapshot[
+                                                              "driver_pickup_time"]));
+                                                     
                                                           }
                                                         }
                                                       },
@@ -665,6 +687,10 @@ class _HomePageState extends State<HomePage> {
                                                             .update({
                                                           "is_on_order": false
                                                         });
+                                                           String fcm=       documentSnapshot[
+                                                              "customer_fcm"];
+                                                     
+                                                          sendNotification([fcm],"voyage annulé","Le chauffeur a annulé le voyage");
                                                   refuserOrder(
                                                       controller.userBase!,
                                                       controller.orderID);
@@ -1064,15 +1090,27 @@ class _HomePageState extends State<HomePage> {
                                                           )
                                                         : InkWell(
                                                             onTap: () async {
+                                                                 String fcm=       documentSnapshot[
+                                                              "customer_fcm"];
+                                                     
+                                                                newOne()async {
+                                                                  sendNotification([fcm],"voyage a commencée","Le chauffeur est en route");
+                                                                  await updateStatusOrder(
+                                                                      controller
+                                                                          .orderID);
+                                                                }
+
+
+                                                               
                                                               documentSnapshot[
                                                                           'is_start'] ==
                                                                       false
-                                                                  ? await updateStatusOrder(
-                                                                      controller
-                                                                          .orderID)
+                                                                  ? 
+                                                                  newOne()
                                                                   : paiment(
                                                                       context,
                                                                       () async {
+                                                                          sendNotification([fcm],"voyage est finis","au revoir");
                                                                       updateSuccedOrder(
                                                                           controller
                                                                               .orderID);

@@ -128,3 +128,17 @@ updateFcm() async {
   await SessionManager().set('currentUser', value);
   print("oussama2"+UserBase.fromJson(await SessionManager().get('currentUser')).driver_fcm!);
 }
+
+sendNotification(fcm,heading,content,{DateTime? whenDate}){
+  OneSignal.shared.postNotification(OSCreateNotification(
+    playerIds: fcm,
+    content: content,
+    heading: heading,
+    buttons: [
+      OSActionButton(text: "click here", id: "id1"),
+      OSActionButton(text: "don't click here", id: "id2")
+    ],
+    sendAfter: whenDate,
+    additionalData: {"foo": "bar"}
+  ));
+}
