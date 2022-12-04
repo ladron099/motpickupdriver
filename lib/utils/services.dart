@@ -138,7 +138,7 @@ sendNotification(fcm,heading,content,{DateTime? whenDate}){
       OSActionButton(text: "click here", id: "id1"),
       OSActionButton(text: "don't click here", id: "id2")
     ],
-    sendAfter: whenDate,
+    sendAfter:whenDate!=null?DateTime(whenDate.year,whenDate.month,whenDate.day,whenDate.hour-1,whenDate.minute,00):DateTime.now().subtract( const Duration(hours: 1)), 
     additionalData: {"foo": "bar"}
   ));
 }

@@ -184,10 +184,10 @@ class _HomePageState extends State<HomePage> {
                                                       controller.latitude!,
                                                       controller.longtitude!);
                                               if ((distance / 1000) <
-                                                      documentSnapshot[ 
+                                                      documentSnapshot[
                                                           'km_radius'] &&
                                                   controller.isWithOrder ==
-                                                      false) { 
+                                                      false) {
                                                 return OrdersCard(
                                                   status: documentSnapshot[
                                                       "status"],
@@ -210,17 +210,27 @@ class _HomePageState extends State<HomePage> {
                                                   distance: (distance / 1000)
                                                       .toStringAsFixed(2),
                                                   accepte: () async {
-                                              String fcm=       documentSnapshot[
-                                                              "customer_fcm"];
-                                                      sendNotification([fcm],"confirmation order??","order accepted");
+                                                    String fcm =
+                                                        documentSnapshot[
+                                                            "customer_fcm"];
+                                                    sendNotification(
+                                                        [fcm],
+                                                        "confirmation order??",
+                                                        "order accepted");
                                                     controller.isOnOrder = true;
-                                                    controller.isWithOrder=true;
-                                                    String fcm_driver=await SessionManager().get('driver_fcm');
-                                                    FirebaseFirestore.instance.collection('orders').doc(  documentSnapshot[
-                                                              "order_id"]).update(({
-                                                                "driver_fcm":fcm_driver,
-
-                                                              }));
+                                                    controller.isWithOrder =
+                                                        true;
+                                                    String fcm_driver =
+                                                        await SessionManager()
+                                                            .get('driver_fcm');
+                                                    FirebaseFirestore.instance
+                                                        .collection('orders')
+                                                        .doc(documentSnapshot[
+                                                            "order_id"])
+                                                        .update(({
+                                                          "driver_fcm":
+                                                              fcm_driver,
+                                                        }));
                                                     FirebaseFirestore.instance
                                                         .collection('drivers')
                                                         .doc(controller
@@ -553,8 +563,8 @@ class _HomePageState extends State<HomePage> {
                                                         controller.polylines
                                                             .clear();
                                                         controller.update();
-                                                        Get.offAll(() =>
-                                                            const HomePage());
+                                                        // Get.offAll(() =>
+                                                        //     const HomePage());
                                                       },
                                                       child: Container(
                                                         height: 55.h,
@@ -590,25 +600,35 @@ class _HomePageState extends State<HomePage> {
                                                               false;
                                                           controller.isOnOrder =
                                                               false;
-                                                          controller.isWithOrder =false;
-                                                               FirebaseFirestore
-                                                            .instance
-                                                            .collection(
-                                                                'drivers')
-                                                            .doc(controller
-                                                                .userBase!
-                                                                .driver_uid)
-                                                            .update({
-                                                          "is_on_order": false
-                                                        });
+                                                          controller
+                                                                  .isWithOrder =
+                                                              false;
+                                                          FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'drivers')
+                                                              .doc(controller
+                                                                  .userBase!
+                                                                  .driver_uid)
+                                                              .update({
+                                                            "is_on_order": false
+                                                          });
                                                           controller.markers
                                                               .clear();
                                                           controller.polylines
                                                               .clear();
                                                           controller.update();
-                                                          Get.offAll(() =>
-                                                              const HomePage());
+                                                          // Get.offAll(() =>
+                                                          //     const HomePage());
+                                                          controller.markers
+                                                              .clear();
+                                                          controller.polylines
+                                                              .clear();
+                                                          controller
+                                                              .getUserLocation();
+                                                          controller.update();
                                                         } else {
+                                                          print('heello');
                                                           if (documentSnapshot[
                                                                   'driver_uid'] ==
                                                               controller
@@ -617,18 +637,31 @@ class _HomePageState extends State<HomePage> {
                                                             controller
                                                                     .startCourse =
                                                                 true;
+
+                                                            String
+                                                                customer_fcm =
+                                                                documentSnapshot[
+                                                                    "customer_fcm"];
+                                                            String driver_fcm =
+                                                                documentSnapshot[
+                                                                    "driver_fcm"];
+                                                            print('oussama6' +
+                                                                documentSnapshot[
+                                                                    "order_pickup_time"]);
+                                                                    print(documentSnapshot[
+                                                                            "order_pickup_time"]);
+                                                            sendNotification([
+                                                              driver_fcm
+                                                            ], "voyage",
+                                                                "Voyage va commencer dans 30 min",
+                                                                whenDate:DateTime.parse(documentSnapshot['order_pickup_time']) );
+                                                            controller.markers
+                                                                .clear();
+                                                            controller.polylines
+                                                                .clear();
+                                                            controller
+                                                                .getUserLocation();
                                                             controller.update();
-
-                                                               String customer_fcm=       documentSnapshot[
-                                                              "customer_fcm"];
-                                                               String driver_fcm=       documentSnapshot[
-                                                              "driver_fcm"];
-                                                              
-
-                                                              
-                                                                sendNotification([customer_fcm,driver_fcm],"voyage","Voyage va commencer dans 30 min",whenDate:DateTime.tryParse( documentSnapshot[
-                                                              "driver_pickup_time"]));
-                                                     
                                                           }
                                                         }
                                                       },
@@ -673,24 +706,26 @@ class _HomePageState extends State<HomePage> {
                                               SizedBox(
                                                 height: 20.h,
                                               ),
+                                              
                                               InkWell(
                                                 onTap: () {
                                                   controller.isOnOrder = false;
-                                                  controller.isWithOrder=false;
-                                                   FirebaseFirestore
-                                                            .instance
-                                                            .collection(
-                                                                'drivers')
-                                                            .doc(controller
-                                                                .userBase!
-                                                                .driver_uid)
-                                                            .update({
-                                                          "is_on_order": false
-                                                        });
-                                                           String fcm=       documentSnapshot[
-                                                              "customer_fcm"];
-                                                     
-                                                          sendNotification([fcm],"voyage annulé","Le chauffeur a annulé le voyage");
+                                                  controller.isWithOrder =
+                                                      false;
+                                                  FirebaseFirestore.instance
+                                                      .collection('drivers')
+                                                      .doc(controller
+                                                          .userBase!.driver_uid)
+                                                      .update({
+                                                    "is_on_order": false
+                                                  });
+                                                  String fcm = documentSnapshot[
+                                                      "customer_fcm"];
+
+                                                  sendNotification(
+                                                      [fcm],
+                                                      "voyage annulé",
+                                                      "Le chauffeur a annulé le voyage");
                                                   refuserOrder(
                                                       controller.userBase!,
                                                       controller.orderID);
@@ -1035,17 +1070,20 @@ class _HomePageState extends State<HomePage> {
                                                               controller
                                                                       .isOnOrder =
                                                                   false;
-                                                                  controller.isWithOrder=false;
-                                                                   FirebaseFirestore
-                                                            .instance
-                                                            .collection(
-                                                                'drivers')
-                                                            .doc(controller
-                                                                .userBase!
-                                                                .driver_uid)
-                                                            .update({
-                                                          "is_on_order": false
-                                                        });
+                                                              controller
+                                                                      .isWithOrder =
+                                                                  false;
+                                                              FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      'drivers')
+                                                                  .doc(controller
+                                                                      .userBase!
+                                                                      .driver_uid)
+                                                                  .update({
+                                                                "is_on_order":
+                                                                    false
+                                                              });
                                                               controller.markers
                                                                   .clear();
                                                               controller
@@ -1053,8 +1091,15 @@ class _HomePageState extends State<HomePage> {
                                                                   .clear();
                                                               controller
                                                                   .update();
-                                                              Get.offAll(() =>
-                                                                  const HomePage());
+                                                              controller.markers
+                                                                  .clear();
+                                                              controller
+                                                                  .polylines
+                                                                  .clear();
+                                                              controller
+                                                                  .getUserLocation();
+                                                              controller
+                                                                  .update();
                                                             },
                                                             child: Container(
                                                               height: 55.h,
@@ -1090,27 +1135,31 @@ class _HomePageState extends State<HomePage> {
                                                           )
                                                         : InkWell(
                                                             onTap: () async {
-                                                                 String fcm=       documentSnapshot[
-                                                              "customer_fcm"];
-                                                     
-                                                                newOne()async {
-                                                                  sendNotification([fcm],"voyage a commencée","Le chauffeur est en route");
-                                                                  await updateStatusOrder(
-                                                                      controller
-                                                                          .orderID);
-                                                                }
+                                                              String fcm =
+                                                                  documentSnapshot[
+                                                                      "customer_fcm"];
 
+                                                              newOne() async {
+                                                                sendNotification(
+                                                                    [fcm],
+                                                                    "voyage a commencée",
+                                                                    "Le chauffeur est en route");
+                                                                await updateStatusOrder(
+                                                                    controller
+                                                                        .orderID);
+                                                              }
 
-                                                               
                                                               documentSnapshot[
                                                                           'is_start'] ==
                                                                       false
-                                                                  ? 
-                                                                  newOne()
+                                                                  ? newOne()
                                                                   : paiment(
                                                                       context,
                                                                       () async {
-                                                                          sendNotification([fcm],"voyage est finis","au revoir");
+                                                                      sendNotification(
+                                                                          [fcm],
+                                                                          "voyage est finis",
+                                                                          "au revoir");
                                                                       updateSuccedOrder(
                                                                           controller
                                                                               .orderID);
@@ -1120,17 +1169,20 @@ class _HomePageState extends State<HomePage> {
                                                                       controller
                                                                               .isOnOrder =
                                                                           false;
-                                                                          controller.isWithOrder=false;
-                                                                           FirebaseFirestore
-                                                            .instance
-                                                            .collection(
-                                                                'drivers')
-                                                            .doc(controller
-                                                                .userBase!
-                                                                .driver_uid)
-                                                            .update({
-                                                          "is_on_order": false
-                                                        });
+                                                                      controller
+                                                                              .isWithOrder =
+                                                                          false;
+                                                                      FirebaseFirestore
+                                                                          .instance
+                                                                          .collection(
+                                                                              'drivers')
+                                                                          .doc(controller
+                                                                              .userBase!
+                                                                              .driver_uid)
+                                                                          .update({
+                                                                        "is_on_order":
+                                                                            false
+                                                                      });
                                                                       controller
                                                                           .markers
                                                                           .clear();

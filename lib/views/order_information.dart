@@ -12,6 +12,7 @@ import 'package:motopickupdriver/controllers/order_information.dart';
 import 'package:motopickupdriver/utils/buttons.dart';
 import 'package:motopickupdriver/utils/colors.dart';
 import 'package:motopickupdriver/utils/models/userBase.dart';
+import 'package:motopickupdriver/utils/services.dart';
 import 'package:motopickupdriver/utils/typography.dart';
 
 import '../utils/queries.dart';
@@ -431,6 +432,13 @@ class OrderInformation extends StatelessWidget {
                                           .update(({
                                             'is_on_order': true,
                                           }));
+                                             String fcm = documentSnapshot[0][
+                                                      "customer_fcm"];
+
+                                                   sendNotification(
+                                                                    [fcm],
+                                                                    "voyage a commencée",
+                                                                    "Le chauffeur est en route");
                                           controller.contrr.isWithOrder=true;
                                           controller.contrr.update();
                                               }else{
@@ -446,7 +454,12 @@ class OrderInformation extends StatelessWidget {
                                           .doc(documentSnapshot[0]['driver_uid'])
                                           .update(({
                                             'is_on_order': false,
-                                          }));
+                                          })); String fcm = documentSnapshot[0][
+                                                      "customer_fcm"];
+                                           sendNotification(
+                                                                          [fcm],
+                                                                          "voyage est finis",
+                                                                          "au revoir");
                                           controller.contrr.isWithOrder=false;
                                           controller.contrr.update();
                                               }
@@ -464,6 +477,13 @@ class OrderInformation extends StatelessWidget {
                                             'is_canceled_by_driver': true,
                                             'status': 0,
                                           }));
+                                             String fcm = documentSnapshot[0][
+                                                      "customer_fcm"];
+
+                                                  sendNotification(
+                                                      [fcm],
+                                                      "voyage annulé",
+                                                      "Le chauffeur a annulé le voyage");
                                       // refuserOrder(widget.drive, order.uid);
                                     },
                                     child: Container(
