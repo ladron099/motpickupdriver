@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -13,13 +14,59 @@ import 'package:motopickupdriver/views/completeYourProfile/complete_profile.dart
 import 'package:motopickupdriver/views/congrats_page.dart';
 import 'package:motopickupdriver/views/home_page.dart';
 
+import '../utils/alert_dialog.dart';
+
 class WelcomeController extends GetxController {
   RxBool loading = false.obs;
-  void googleAuth() async {
+
+
+
+
+  Future<String> isUserExist(email) async {
+  bool exist = false;
+  String provider = '';
+  await FirebaseFirestore.instance
+      .collection('users')
+      .where('customer_email', isEqualTo: email)
+      .where('is_deleted_account', isEqualTo: false)
+      .snapshots()
+      .first
+      .then((value) async {
+         List<DocumentSnapshot> documentSnapshot = value.docs;
+        if (value.size != 0) provider = documentSnapshot[0]['customer_type_auth'];
+      });
+
+  await FirebaseFirestore.instance
+      .collection('drivers')
+      .where('driver_email', isEqualTo: email)
+      .where('is_deleted_account', isEqualTo: false)
+      .snapshots()
+      .first
+      .then((value) async {
+         List<DocumentSnapshot> documentSnapshot = value.docs;
+        if (value.size != 0) provider = documentSnapshot[0]['driver_type_auth'];
+      });
+
+  return provider;
+}
+
+
+  void googleAuth(context) async {
     loading.toggle();
     GoogleSignInAccount? googleAccount =
-        await GoogleSignIn(scopes: ['profile', 'email']).signIn();
-    GoogleSignInAuthentication googleSignInAuthentication =
+        await GoogleSignIn(scopes: ['profile', 'email']).signIn(); 
+    await isUserExist(googleAccount!.email.toLowerCase()).then((value) async {
+      if (value != "Google" && value != "") {
+        await FirebaseAuth.instance.signOut();
+        await GoogleSignIn(scopes: ['profile', 'email']).signOut();
+        return showAlertDialogOneButton(
+            context,
+            "L'utilisateur existe déjà",
+            "Il existe déjà un compte avec cet e-mail, veuillez essayer de vous connecter avec $value",
+          "Ok");
+}
+else{
+   GoogleSignInAuthentication googleSignInAuthentication =
         await googleAccount!.authentication;
     AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleSignInAuthentication.accessToken,
@@ -113,6 +160,8 @@ class WelcomeController extends GetxController {
         );
       }
     });
+}
+});
     loading.toggle();
   }
 
@@ -126,4 +175,10 @@ class WelcomeController extends GetxController {
     User? user = authResult.user;
     loading.toggle();
   }
+
+  
+
+
+
+
 }

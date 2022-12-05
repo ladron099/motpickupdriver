@@ -620,6 +620,29 @@ class _HomePageState extends State<HomePage> {
                                                           controller.update();
                                                           // Get.offAll(() =>
                                                           //     const HomePage());
+                                                          print("hello");
+
+                                                           String
+                                                                customer_fcm =
+                                                                documentSnapshot[
+                                                                    "customer_fcm"];
+                                                            String driver_fcm =
+                                                                documentSnapshot[
+                                                                    "driver_fcm"];
+                                                                    print(driver_fcm+"ffff");
+                                                                    print(customer_fcm+"ffff");
+                                                                    print(documentSnapshot['order_pickup_time']) ;  
+                                                                    print(DateTime.parse(documentSnapshot['order_pickup_time']))       ;                                                   
+                                                             sendNotification([
+                                                              customer_fcm
+                                                            ], "voyage",
+                                                                "Voyage va commencer dans 30 min",
+                                                                whenDate:DateTime.parse(documentSnapshot['order_pickup_time']) );
+                                                            sendNotification([
+                                                              driver_fcm
+                                                            ], "voyage",
+                                                                "Voyage va commencer dans 30 min",
+                                                                whenDate:DateTime.parse(documentSnapshot['order_pickup_time']) );
                                                           controller.markers
                                                               .clear();
                                                           controller.polylines
@@ -650,11 +673,8 @@ class _HomePageState extends State<HomePage> {
                                                                     "order_pickup_time"]);
                                                                     print(documentSnapshot[
                                                                             "order_pickup_time"]);
-                                                            sendNotification([
-                                                              driver_fcm
-                                                            ], "voyage",
-                                                                "Voyage va commencer dans 30 min",
-                                                                whenDate:DateTime.parse(documentSnapshot['order_pickup_time']) );
+                                                          
+                                                          
                                                             controller.markers
                                                                 .clear();
                                                             controller.polylines

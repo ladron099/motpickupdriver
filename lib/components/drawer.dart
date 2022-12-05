@@ -4,6 +4,7 @@ import 'package:boxicons/boxicons.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:motopickupdriver/utils/colors.dart';
@@ -16,6 +17,8 @@ import 'package:motopickupdriver/views/profile/profile_page.dart';
 import 'package:motopickupdriver/views/settings_page.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import '../utils/services.dart';
 
 class NavigationDrawerWidget extends StatefulWidget {
   UserBase? currentUser;
@@ -131,8 +134,11 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
               text: 'Se déconnecter',
               icon: Boxicons.bx_log_out,
               onClicked: ()async {
-                Navigator.pop(context);
-                logout(context);
+                // Navigator.pop(context);
+                // logout(context);
+                String fcm= await SessionManager().get('driver_fcm');
+                print(fcm+"wl");
+                await sendNotification([fcm],"ous","oussa",whenDate:DateTime(2022,12,04,12,20));
               }
             //  await OneSignal.shared.postNotification(OSCreateNotification(content: "commande hh",playerIds: ['edf98bc2-98b6-43cd-b56a-82aee0f65c20']) ) ; },
             ),

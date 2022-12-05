@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,11 +52,47 @@ class LoginPageController extends GetxController {
     }
     return Future.value(isValid);
   }
+Future<String> userHasPhone(phone) async {
+  String provider = '';
+  await FirebaseFirestore.instance
+      .collection('users')
+      .where('customer_phone_number', isEqualTo: phone)
+      .where('is_deleted_account', isEqualTo: false)
+      .snapshots()
+      .first
+      .then((value) async {
+        List<DocumentSnapshot> documentSnapshot = value.docs;
+        if (value.size != 0) provider = documentSnapshot[0]['customer_auth_type'];
+      });
 
+  await FirebaseFirestore.instance
+      .collection('drivers')
+      .where('driver_phone_number', isEqualTo: phone)
+      .where('is_deleted_account', isEqualTo: false)
+      .snapshots()
+      .first
+      .then((value) async {
+         List<DocumentSnapshot> documentSnapshot = value.docs;
+        if (value.size != 0)   provider = documentSnapshot[0]['driver_auth_type'];
+      });
+
+  return provider;
+}
   submit(context) async {
     validate(context).then((value) async {
       if (value) {
-        loginWithPhone(indicatif + phone.text).then((value) async {
+
+        String phoneNo=indicatif + phone.text;
+        await userHasPhone( phoneNo).then((value){
+            if(value !="Phone" && value !=""){
+            return showAlertDialogOneButton(
+                context,
+                "L'utilisateur existe déjà",
+                "Il existe déjà un compte avec cet e-mail, veuillez essayer de vous connecter avec $value",
+      "Ok");
+             
+            }else{
+                 loginWithPhone(indicatif + phone.text).then((value) async {
           try {
             UserCredential authResult = await FirebaseAuth.instance
                 .signInWithEmailAndPassword(
@@ -115,7 +152,10 @@ class LoginPageController extends GetxController {
             }
           }
         });
-      }
+    
+            }
+        });
+       }
     });
   }
 }

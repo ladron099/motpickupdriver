@@ -69,7 +69,7 @@ class WelcomeScreen extends StatelessWidget {
                           text: 'Connectez-vous avec Google',
                           icon: FontAwesomeIcons.google,
                           function: () {
-                            controller.googleAuth();
+                            controller.googleAuth(context);
                           },
                         ),
                         /*  20.verticalSpace,

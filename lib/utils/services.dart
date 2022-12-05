@@ -130,7 +130,10 @@ updateFcm() async {
 }
 
 sendNotification(fcm,heading,content,{DateTime? whenDate}){
-  OneSignal.shared.postNotification(OSCreateNotification(
+  OneSignal.shared.postNotification(
+    
+    
+    OSCreateNotification(
     playerIds: fcm,
     content: content,
     heading: heading,
@@ -138,7 +141,9 @@ sendNotification(fcm,heading,content,{DateTime? whenDate}){
       OSActionButton(text: "click here", id: "id1"),
       OSActionButton(text: "don't click here", id: "id2")
     ],
-    sendAfter:whenDate!=null?DateTime(whenDate.year,whenDate.month,whenDate.day,whenDate.hour-1,whenDate.minute,00):DateTime.now().subtract( const Duration(hours: 1)), 
+    sendAfter:whenDate!=null?DateTime(whenDate.year,whenDate.month,whenDate.day,whenDate.hour,whenDate.minute,0).subtract(const Duration(minutes:30)):DateTime.now(), 
     additionalData: {"foo": "bar"}
   ));
+
+
 }

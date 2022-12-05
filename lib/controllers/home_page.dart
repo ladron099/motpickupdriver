@@ -1,5 +1,7 @@
 // ignore_for_file: file_names
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -79,6 +81,27 @@ getWithOrder()async{
       ),
     );
     update();
+    print(longtitude);
+    print(latitude);
+  }
+
+  updateMyLocation() {
+    Timer.periodic(
+      Duration(seconds:15), (val)async{
+getUserLocation();
+
+await FirebaseFirestore.instance
+        .collection('drivers')
+        .doc(userBase!.driver_uid)
+        .update(
+          {
+            'driver_latitude': latitude,
+            'driver_longitude': longtitude,
+          
+          }
+        );
+    }
+    );
   }
 
   setRoad(startLatitude, startLongtitude, endlatitude, endlongtitude) async {
@@ -141,7 +164,6 @@ getWithOrder()async{
   @override
   void onInit() async {
     super.onInit();
-   
     await getCurrentUser().then((value) async {
       userBase = value;
       status = userBase!.is_online;
@@ -149,6 +171,7 @@ getWithOrder()async{
     });
       await getWithOrder();
     isTrue.toggle();
+    await updateMyLocation();
     update();
   }
 }

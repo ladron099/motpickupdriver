@@ -81,7 +81,7 @@ class Congrats extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20.w),
                               child: Text(
-                                'Votre demande a été envoyée avec succès, nous vous appellerons tant que nous aurons vérifié votre compte.',
+                                'Nous vous remercions pour votre inscription. Notre équipe se chargera d’examiner et valider votre demande dans les meilleurs délais.',
                                 textAlign: TextAlign.center,
                                 style: bodyTextStyle,
                               ),
