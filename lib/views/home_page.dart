@@ -1167,6 +1167,8 @@ class _HomePageState extends State<HomePage> {
                                                                 await updateStatusOrder(
                                                                     controller
                                                                         .orderID);
+                                                                        controller.updateMyLocation( documentSnapshot["order_id"]);
+                                                                        controller.update();
                                                               }
 
                                                               documentSnapshot[

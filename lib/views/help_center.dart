@@ -122,7 +122,7 @@ if (await canLaunch(url)) {
               10.verticalSpace,
               SocialButton(
                 color: Colors.red,
-                text: 'Appeller la police',
+                text: 'Appeler la police',
                 icon: Boxicons.bx_error,
                 function: () async {
                   await FlutterPhoneDirectCaller.callNumber('19');

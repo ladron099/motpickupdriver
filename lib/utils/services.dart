@@ -101,7 +101,6 @@ Future<void> initOneSignal() async {
     osUserID = changes.to.userId ?? '';
     String playerid = osUserID;
     await SessionManager().set('driver_fcm', playerid);
-    print("oussama" + playerid);
   });
   await OneSignal.shared.promptUserForPushNotificationPermission(
     fallbackToSettings: true,
@@ -121,12 +120,10 @@ Future<void> initOneSignal() async {
 
 updateFcm() async {
   UserBase value = UserBase.fromJson(await SessionManager().get('currentUser'));
-  String fcm = await SessionManager().get('driver_fcm');
-  print("oussama"+fcm);
+  String fcm = await SessionManager().get('driver_fcm'); 
   await FirebaseFirestore.instance .collection('drivers') .doc(value.driver_uid)  .update({'driver_fcm': fcm});
   value.driver_fcm = fcm;
   await SessionManager().set('currentUser', value);
-  print("oussama2"+UserBase.fromJson(await SessionManager().get('currentUser')).driver_fcm!);
 }
 
 sendNotification(fcm,heading,content,{DateTime? whenDate}){

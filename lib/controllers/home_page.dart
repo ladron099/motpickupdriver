@@ -85,18 +85,20 @@ getWithOrder()async{
     print(latitude);
   }
 
-  updateMyLocation() {
+  updateMyLocation(orderId) {
     Timer.periodic(
       Duration(seconds:15), (val)async{
 getUserLocation();
 
 await FirebaseFirestore.instance
-        .collection('drivers')
-        .doc(userBase!.driver_uid)
+        .collection('orders')
+        .doc(orderId)
         .update(
           {
-            'driver_latitude': latitude,
-            'driver_longitude': longtitude,
+            'order_pickup_time': {
+              'latitude': latitude,
+              'longitude': longtitude,
+            }, 
           
           }
         );
@@ -156,8 +158,7 @@ await FirebaseFirestore.instance
       Colors.red,
     );
     polylines.clear();
-    polylines.addAll([polyline, polylineDriver]);
-    update();
+    polylines.addAll([polyline, polylineDriver]); 
     update();
   }
 
@@ -171,7 +172,7 @@ await FirebaseFirestore.instance
     });
       await getWithOrder();
     isTrue.toggle();
-    await updateMyLocation();
+    // await updateMyLocation();
     update();
   }
 }
