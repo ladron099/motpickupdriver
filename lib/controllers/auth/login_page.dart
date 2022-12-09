@@ -60,9 +60,11 @@ Future<String> userHasPhone(phone) async {
       .where('is_deleted_account', isEqualTo: false)
       .snapshots()
       .first
-      .then((value) async {
-        List<DocumentSnapshot> documentSnapshot = value.docs;
-        if (value.size != 0) provider = documentSnapshot[0]['customer_auth_type'];
+      .then((value) async { 
+        if (value.size != 0) {
+              provider = value.docs.first.get('customer_auth_type');
+}
+
       });
 
   await FirebaseFirestore.instance
@@ -71,9 +73,9 @@ Future<String> userHasPhone(phone) async {
       .where('is_deleted_account', isEqualTo: false)
       .snapshots()
       .first
-      .then((value) async {
-         List<DocumentSnapshot> documentSnapshot = value.docs;
-        if (value.size != 0)   provider = documentSnapshot[0]['driver_auth_type'];
+      .then((value) async { 
+        if (value.size != 0) {
+            provider = value.docs.first.get('driver_type_auth');}
       });
 
   return provider;
@@ -82,8 +84,7 @@ Future<String> userHasPhone(phone) async {
     validate(context).then((value) async {
       if (value) {
 
-        String phoneNo=indicatif + phone.text;
-        await userHasPhone( phoneNo).then((value){
+        await userHasPhone( indicatif + phone.text).then((value){
             if(value !="Phone" && value !=""){
             return showAlertDialogOneButton(
                 context,

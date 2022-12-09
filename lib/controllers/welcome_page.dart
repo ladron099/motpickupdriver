@@ -31,9 +31,8 @@ class WelcomeController extends GetxController {
       .where('is_deleted_account', isEqualTo: false)
       .snapshots()
       .first
-      .then((value) async {
-         List<DocumentSnapshot> documentSnapshot = value.docs;
-        if (value.size != 0) provider = documentSnapshot[0]['customer_type_auth'];
+      .then((value) async { 
+        if (value.size != 0) provider = value.docs.first.get('customer_auth_type');
       });
 
   await FirebaseFirestore.instance
@@ -43,8 +42,8 @@ class WelcomeController extends GetxController {
       .snapshots()
       .first
       .then((value) async {
-         List<DocumentSnapshot> documentSnapshot = value.docs;
-        if (value.size != 0) provider = documentSnapshot[0]['driver_type_auth'];
+         
+        if (value.size != 0) provider = value.docs.first.get('driver_type_auth');
       });
 
   return provider;
@@ -55,7 +54,8 @@ class WelcomeController extends GetxController {
     loading.toggle();
     GoogleSignInAccount? googleAccount =
         await GoogleSignIn(scopes: ['profile', 'email']).signIn(); 
-    await isUserExist(googleAccount!.email.toLowerCase()).then((value) async {
+        if(googleAccount!=null){
+            await isUserExist(googleAccount!.email.toLowerCase()).then((value) async {
       if (value != "Google" && value != "") {
         await FirebaseAuth.instance.signOut();
         await GoogleSignIn(scopes: ['profile', 'email']).signOut();
@@ -162,7 +162,11 @@ else{
     });
 }
 });
-    loading.toggle();
+  loading.toggle();
+        }
+        else{
+          loading.toggle();
+        } 
   }
 
   void facebookAuth() async {

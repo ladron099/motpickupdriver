@@ -25,7 +25,7 @@ class HomePageController extends GetxController {
   GoogleMapController? mapController;
   bool isOnOrder = false, startCourse = false;
   bool isWithOrder= false;
-
+// bool showCard=false;
   String? orderID;
 
 getWithOrder()async{

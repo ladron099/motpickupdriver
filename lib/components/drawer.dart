@@ -134,13 +134,14 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
               text: 'Se déconnecter',
               icon: Boxicons.bx_log_out,
               onClicked: ()async {
-                // Navigator.pop(context);
-                // logout(context);
-                String fcm= await SessionManager().get('driver_fcm');
-                print(fcm+"wl");
-                await sendNotification([fcm],"ous","oussa",whenDate:DateTime(2022,12,04,12,20));
+                Navigator.pop(context);
+                logout(context);
+                // String fcm= await SessionManager().get('driver_fcm');
+                // print(fcm+"wl");
+                //  await sendPlanifiedNotification([fcm],"this is 12:04","this is 12:00",DateTime(2022,12,08,12,04));
+              // await OneSignal.shared.postNotification(OSCreateNotification(content: "commande hh",playerIds: [fcm]) ) ; 
+
               }
-            //  await OneSignal.shared.postNotification(OSCreateNotification(content: "commande hh",playerIds: ['edf98bc2-98b6-43cd-b56a-82aee0f65c20']) ) ; },
             ),
           ],
         ),

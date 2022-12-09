@@ -13,6 +13,7 @@ import 'package:motopickupdriver/utils/services.dart';
 import 'package:motopickupdriver/utils/typography.dart';
 import 'package:motopickupdriver/views/auth/login_page.dart';
 import 'package:motopickupdriver/views/help_center.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class SettingController extends GetxController {
   UserBase? userBase;
@@ -20,7 +21,8 @@ class SettingController extends GetxController {
   RxBool isTrue = false.obs, loading = false.obs;
   TextEditingController reason = TextEditingController();
   TextEditingController password = TextEditingController();
-
+RxBool? notificationStatus;
+  RxBool visibleLanguage = false.obs;
   delete(context) async {
     _displayTextInputDialog(context, password);
   }
@@ -128,6 +130,34 @@ class SettingController extends GetxController {
       });
     });
   }
+  checkNotification() async {
+    final isActivated =await  SessionManager().get('isActiveNotificationDriver');
+    if(isActivated == null || isActivated == false){
+      notificationStatus = false.obs;
+
+      update();
+    }
+    else if(isActivated == true) {
+      notificationStatus = true.obs;
+      update();
+    }
+    update();
+  }
+
+  switchNotification() async {
+    final isActivated = await SessionManager().get('isActiveNotificationDriver');
+      if(isActivated == true){
+          SessionManager().set('isActiveNotificationDriver', false);
+          notificationStatus!.value = !notificationStatus!.value;
+          OneSignal.shared.disablePush(true);
+      }else{
+          SessionManager().set('isActiveNotificationDriver', true);
+          notificationStatus = true.obs;
+          OneSignal.shared.disablePush(false);
+      }
+    update();
+
+}
 
   @override
   void onInit() async {
@@ -136,6 +166,7 @@ class SettingController extends GetxController {
       userBase = value;
       isTrue = true.obs;
       tmpUser = TmpUser.fromJson(await SessionManager().get('tmpUser'));
+      checkNotification();
       update();
     });
   }

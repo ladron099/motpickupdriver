@@ -4,6 +4,7 @@ import 'package:boxicons/boxicons.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -185,18 +186,9 @@ class SettingScreen extends StatelessWidget {
                                   style: darkButtonTextStyle,
                                 ),
                                 const Spacer(),
-                                Container(
-                                  height: 30.h,
-                                  width: 30.h,
-                                  decoration: BoxDecoration(
-                                    color: dark.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: const Icon(
-                                    Boxicons.bx_chevron_right,
-                                    color: dark,
-                                  ),
-                                ),
+                              FlutterSwitch(value: controller.notificationStatus!.value, onToggle: (value){
+                                    controller.switchNotification();
+                                  }, activeColor: primary,),
                                 15.horizontalSpace,
                               ],
                             ),

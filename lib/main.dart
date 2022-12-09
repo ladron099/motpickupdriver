@@ -20,6 +20,7 @@ void main() async {
   await GetStorage.init();
   await handlerPermission();
   await initOneSignal();
+  await checkIsFirstTime();
   Widget? mainPage;
   await initWidget().then((page) {
     mainPage = page;

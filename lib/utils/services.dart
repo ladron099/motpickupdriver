@@ -120,27 +120,44 @@ Future<void> initOneSignal() async {
 
 updateFcm() async {
   UserBase value = UserBase.fromJson(await SessionManager().get('currentUser'));
-  String fcm = await SessionManager().get('driver_fcm'); 
-  await FirebaseFirestore.instance .collection('drivers') .doc(value.driver_uid)  .update({'driver_fcm': fcm});
+  String fcm = await SessionManager().get('driver_fcm');
+  await FirebaseFirestore.instance
+      .collection('drivers')
+      .doc(value.driver_uid)
+      .update({'driver_fcm': fcm});
   value.driver_fcm = fcm;
   await SessionManager().set('currentUser', value);
 }
 
-sendNotification(fcm,heading,content,{DateTime? whenDate}){
-  OneSignal.shared.postNotification(
-    
-    
+sendNotification(fcm, heading, content) async {
+ await  OneSignal.shared.postNotification(
     OSCreateNotification(
     playerIds: fcm,
     content: content,
     heading: heading,
-    buttons: [
-      OSActionButton(text: "click here", id: "id1"),
-      OSActionButton(text: "don't click here", id: "id2")
-    ],
-    sendAfter:whenDate!=null?DateTime(whenDate.year,whenDate.month,whenDate.day,whenDate.hour,whenDate.minute,0).subtract(const Duration(minutes:30)):DateTime.now(), 
-    additionalData: {"foo": "bar"}
+  ));
+}
+
+
+
+checkIsFirstTime() async {
+  final isFirstTime = await SessionManager().get('isFirstTime');
+  if(isFirstTime == null){
+    await SessionManager().set("isFirstTime", false);
+    await SessionManager().set("isActiveNotificationDriver",true);
+}
+}
+
+sendPlanifiedNotification(fcm, heading, content, whenDate) async { 
+  DateTime dateTime = DateTime.now(); 
+ await  OneSignal.shared.postNotification(
+    OSCreateNotification(
+    playerIds: fcm,
+    content: content,
+    heading: heading,
+    sendAfter:DateTime(whenDate.year,whenDate.month,whenDate.day,whenDate.hour - int.parse(dateTime.timeZoneName),whenDate.minute,0), 
   ));
 
-
 }
+
+

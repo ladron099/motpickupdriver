@@ -94,33 +94,21 @@ class EditInfo extends StatelessWidget {
                         ),
                         5.verticalSpace,
                         InputTextField(
-                          enable:controller.shown,
+                          enable:false,
                           hintText: 'Entrez votre Email',
                           type: TextInputType.emailAddress,
                           controller: controller.email,
                           icon: Boxicons.bxs_envelope,
                         ),
                         5.verticalSpace,
+                        
                         GetBuilder<EditInfoController>(
                           init: EditInfoController(),
                           builder: (value) => InputDatePicker(
                             dateText: controller.birthday,
                             icon: Boxicons.bxs_calendar,
-                            function: () => DatePicker.showDatePicker(
-                              context,
-                              showTitleActions: true,
-                              onConfirm: (date) {
-                                controller.birthdayChange(date);
-                                controller.update();
-                              },
-                              currentTime: DateFormat("DD-MM-yyyy")
-                                  .parse(controller.birthday),
-                              maxTime: DateTime.now()
-                                  .subtract(const Duration(days: 6570)),
-                              locale: context.locale.toString() == 'fr'
-                                  ? LocaleType.fr
-                                  : LocaleType.ar,
-                            ),
+                            // ignore: avoid_returning_null_for_void
+                            function: () =>null,
                           ),
                         ),
                         17.verticalSpace,

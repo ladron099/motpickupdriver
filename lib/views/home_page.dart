@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage> {
                             Positioned(
                               top: 200.h,
                               child: Container(
-                                height: 500.h,
+                                height:  500.h,
                                 width: MediaQuery.of(context).size.width,
                                 color: Colors.transparent,
                                 child: StreamBuilder(
@@ -188,6 +188,8 @@ class _HomePageState extends State<HomePage> {
                                                           'km_radius'] &&
                                                   controller.isWithOrder ==
                                                       false) {
+                                                        // controller.showCard=true;
+                                                        // controller.update();
                                                 return OrdersCard(
                                                   status: documentSnapshot[
                                                       "status"],
@@ -210,6 +212,8 @@ class _HomePageState extends State<HomePage> {
                                                   distance: (distance / 1000)
                                                       .toStringAsFixed(2),
                                                   accepte: () async {
+                                                    // controller.showCard=false;
+                                                    // controller.update();
                                                     String fcm =
                                                         documentSnapshot[
                                                             "customer_fcm"];
@@ -633,16 +637,16 @@ class _HomePageState extends State<HomePage> {
                                                                     print(customer_fcm+"ffff");
                                                                     print(documentSnapshot['order_pickup_time']) ;  
                                                                     print(DateTime.parse(documentSnapshot['order_pickup_time']))       ;                                                   
-                                                             sendNotification([
+                                                             sendPlanifiedNotification([
                                                               customer_fcm
                                                             ], "voyage",
                                                                 "Voyage va commencer dans 30 min",
-                                                                whenDate:DateTime.parse(documentSnapshot['order_pickup_time']) );
-                                                            sendNotification([
+                                                              DateTime.parse(documentSnapshot['order_pickup_time']) );
+                                                            sendPlanifiedNotification([
                                                               driver_fcm
                                                             ], "voyage",
                                                                 "Voyage va commencer dans 30 min",
-                                                                whenDate:DateTime.parse(documentSnapshot['order_pickup_time']) );
+                                                                DateTime.parse(documentSnapshot['order_pickup_time']) );
                                                           controller.markers
                                                               .clear();
                                                           controller.polylines
