@@ -21,14 +21,14 @@ class RateClient extends StatelessWidget {
     return  
       Scaffold(
         appBar: AppBar(
-          leading: InkWell(
-            onTap: () => Get.back(),
-            child: Icon(
-              Boxicons.bx_arrow_back,
-              color: primary,
-              size: 30.h,
-            ),
-          ),
+          // leading: InkWell(
+          //   onTap: () => Get.back(),
+          //   child: Icon(
+          //     Boxicons.bx_arrow_back,
+          //     color: primary,
+          //     size: 30.h,
+          //   ),
+          // ),
           toolbarHeight: 80.h,
           title: Image.asset(
             'assets/images/logoMoto_colored.png',
@@ -234,10 +234,7 @@ class RateClient extends StatelessWidget {
                                                       onPressed: () async {
                                                         await controller
                                                             .reportDriver();
-                                                        Get.offAll(
-                                                            () => HomePage(),
-                                                            transition: Transition
-                                                                .rightToLeft);
+                                                       Get.back();
                                                       },
                                                       child: Text(
                                                         'Envoyer',

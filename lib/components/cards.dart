@@ -494,7 +494,7 @@ class _CommandCardState extends State<CommandCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      width: 250.w,
+                      width: 230.w,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -542,6 +542,7 @@ class _CommandCardState extends State<CommandCard> {
 
 class OrdersCard extends StatefulWidget {
   String photo, username, orderType, from, to, idOrder, distance;
+  double stars;
   UserBase drive;
   int status;
   final VoidCallback accepte;
@@ -556,6 +557,7 @@ class OrdersCard extends StatefulWidget {
       required this.drive,
       required this.distance,
       required this.accepte,
+      required this.stars,
       Key? key})
       : super(key: key);
 
@@ -564,12 +566,16 @@ class OrdersCard extends StatefulWidget {
 }
 
 class _OrdersCardState extends State<OrdersCard> {
+  double time = 0;
+  String timeText = "";
   @override
   Widget build(BuildContext context) {
+  time = double.parse(widget.distance) / 50 < 1 ? double.parse(widget.distance) / 50 *60 : double.parse(widget.distance) / 50 ; 
+    timeText =   double.parse(widget.distance) / 50 < 1 ? time.toStringAsFixed(1)+" minutes"   :   time.toStringAsFixed(1) + " heures";
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
       child: Container(
-        height: 210.h,
+        height: 230.h,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
@@ -583,7 +589,7 @@ class _OrdersCardState extends State<OrdersCard> {
               Row(
                 children: [
                   SizedBox(
-                    height: 50.h,
+                    height: 60.h,
                     width: 50.h,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(360),
@@ -619,6 +625,47 @@ class _OrdersCardState extends State<OrdersCard> {
                       Row(
                         children: [
                           Icon(
+                            widget.stars >= 1
+                                ? Boxicons.bxs_star
+                                : Boxicons.bx_star,
+                                size: 17.sp,
+                            color: primary,
+                          ),
+                          Icon(
+                            widget.stars >= 2
+                                ? Boxicons.bxs_star
+                                : Boxicons.bx_star,
+                                  size: 17.sp,
+                            color: primary,
+                          ),
+                          Icon(
+                            widget.stars >= 3
+                                ? Boxicons.bxs_star
+                                : Boxicons.bx_star,
+                                  size: 17.sp,
+                            color: primary,
+                          ),
+                          Icon(
+                            widget.stars >= 4
+                                ? Boxicons.bxs_star
+                                : Boxicons.bx_star,
+                                  size: 17.sp,
+                            color: primary,
+                          ),
+                          Icon(
+                            widget.stars >= 5
+                                ? Boxicons.bxs_star
+                                : Boxicons.bx_star,
+                                  size: 17.sp,
+                            color: primary,
+                          )
+                        ],
+                      ),
+                      5.verticalSpace,
+
+                      Row(
+                        children: [
+                          Icon(
                             widget.orderType == "1"
                                 ? Boxicons.bx_package
                                 : FontAwesomeIcons.motorcycle,
@@ -646,7 +693,7 @@ class _OrdersCardState extends State<OrdersCard> {
                     ],
                   ),
                   const Spacer(),
-                  Text('${widget.distance} Km', style: bodyTextStyle),
+                  Text('${widget.distance} Km   ( ${timeText} )', style: bodyTextStyle),
                 ],
               ),
               20.verticalSpace,

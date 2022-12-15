@@ -20,8 +20,6 @@ Future<Widget?> initWidget() async {
     await getCurrentUser().then((value) async {
       isActivated = value!.is_activated_account;
       isVerified = value.is_verified_account;
-          print(value!.is_activated_account);
-          print(value!.is_verified_account);
     });
     
   

@@ -25,10 +25,11 @@ class MyCommand extends StatelessWidget {
         builder: (value) => Scaffold(
           appBar: AppBar(
             leading: InkWell(
-              onTap: () { 
+              onTap: () {
                 print("object");
-                
-                Get.back();},
+
+                Get.back();
+              },
               child: Icon(
                 Boxicons.bx_arrow_back,
                 color: primary,
@@ -49,11 +50,97 @@ class MyCommand extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     20.verticalSpace,
+                    20.verticalSpace,
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       child: Text(
                         'Mes commandes',
                         style: primaryHeadlineTextStyle,
+                      ),
+                    ),
+                    20.verticalSpace,
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 120.h,
+                            width: 160.w,
+                            decoration: BoxDecoration(
+                              color: primary,
+                              border: Border.all(color: primary, width: 15),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                   Icon(
+                                  Boxicons.bx_dollar,
+                                  color: Colors.amberAccent,
+                                  size: 30.h,
+                                
+                                ),
+                                Text(
+                                  controller.userBase!.driver_total_paid.toString() ,
+                                  style: TextStyle(
+                                    fontSize: 25.sp,
+                                    color: Colors.amberAccent,
+                                    fontFamily: "LatoSemiBold",
+                                  ),
+                                ),
+                                Text(
+                                  'Montant total',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: light,
+                                    fontFamily: "LatoSemiBold",
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Spacer(),
+                          Container(
+                            height: 120.h,
+                            width: 160.w,
+                            decoration: BoxDecoration(
+                              color: primary,
+                              border: Border.all(color: primary, width: 15),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            alignment: Alignment.center,
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Boxicons.bx_package,
+                                  color: light,
+                                  size: 30.h,
+                                
+                                ),
+                                Text(
+                                  controller.userBase!.driver_total_orders.toString(),
+                                  style: TextStyle(
+                                    fontSize: 25.sp,
+                                    color: light,
+                                    fontFamily: "LatoSemiBold",
+                                  ),
+                                ),
+                                Text(
+                                  'Total des course',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: light,
+                                    fontFamily: "LatoSemiBold",
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     20.verticalSpace,
@@ -91,9 +178,7 @@ class MyCommand extends StatelessWidget {
                                 .where('driver_uid',
                                     isEqualTo: controller.userBase!.driver_uid)
                                 .where("status", whereIn: [0, 1])
-                                .where(
-                                  'order_pickup_time',
-                                )
+                              
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -168,7 +253,7 @@ class MyCommand extends StatelessWidget {
                                 );
 
                                 return SizedBox(
-                                  height: 570.h,
+                                  height: 386.h,
                                   child: ListView.separated(
                                       shrinkWrap: true,
                                       itemBuilder: (context, index) {
@@ -279,13 +364,13 @@ class MyCommand extends StatelessWidget {
                               } else if (snapshot.hasData) {
                                 List<DocumentSnapshot> documentSnapshot =
                                     snapshot.data!.docs
-                                            .where((element) =>
-                                                element['order_pickup_time']
-                                                    .compareTo(DateFormat(
-                                                            "yyyy-MM-dd HH:mm")
-                                                        .format(
-                                                            DateTime.now())) >=
-                                                0).toList();
+                                        .where((element) =>
+                                            element['order_pickup_time']
+                                                .compareTo(DateFormat(
+                                                        "yyyy-MM-dd HH:mm")
+                                                    .format(DateTime.now())) >=
+                                            0)
+                                        .toList();
                                 documentSnapshot.sort(
                                   (a, b) {
                                     return b['order_pickup_time']
@@ -293,7 +378,7 @@ class MyCommand extends StatelessWidget {
                                   },
                                 );
                                 return SizedBox(
-                                  height: 570.h,
+                                  height: 386.h,
                                   child: ListView.separated(
                                       shrinkWrap: true,
                                       itemBuilder: (context, index) {

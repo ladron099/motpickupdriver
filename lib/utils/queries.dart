@@ -107,8 +107,8 @@ Future createEmergency(Emergency emergency) async {
 }
 
 Future addDriverToOrder(UserBase driver, orderId) async {
-  final fcm= await SessionManager().get('driver_fcm');
-  driver.driver_fcm=fcm; 
+  final fcm = await SessionManager().get('driver_fcm');
+  driver.driver_fcm = fcm;
   final docUser = FirebaseFirestore.instance
       .collection('orders')
       .doc(orderId)
@@ -150,12 +150,32 @@ Future<List<MotoType>> getData() async {
 
 Future refuserOrder(UserBase driver, orderId) async {
   FirebaseFirestore.instance.collection('orders').doc(orderId).update(({
-    'is_canceled_by_driver':true,
-    'status':0,
+        'is_canceled_by_driver': true,
+        'status': 0,
         'drivers_declined': FieldValue.arrayUnion([driver.driver_uid])
       }));
+      String type = "";
+       var docSnapshot2 =
+      await FirebaseFirestore.instance.collection('orders').doc(orderId).get();
+        if (docSnapshot2.exists) {
+    Map<String, dynamic>? data = docSnapshot2.data();
+    type= data!['order_type'];  
+    type != '0'?
+  FirebaseFirestore.instance
+      .collection('drivers')
+      .doc(driver.driver_uid)
+      .update({
+    "is_on_order": false,
+    "driver_cancelled_trip": FieldValue.increment(1),
+  }):FirebaseFirestore.instance
+      .collection('drivers')
+      .doc(driver.driver_uid)
+      .update({
+    "is_on_order": false,
+    "driver_cancelled_delivery": FieldValue.increment(1),
+  });
 }
-
+}
 Future updateStatusOrder(orderId) async {
   FirebaseFirestore.instance
       .collection('orders')

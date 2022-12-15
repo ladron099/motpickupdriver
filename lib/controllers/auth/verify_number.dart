@@ -115,6 +115,8 @@ class VerfiyNumberController extends GetxController {
             driver_driving_licence_expiration_date: '',
             driver_order_total_amount: '',
             driver_anthropometrique: '',
+            driver_total_orders: 0, 
+            driver_total_paid: 0,
           );
           GetStorage().write('isLoggedIn', true);
           await SessionManager().set('currentUser', userBase);

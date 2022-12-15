@@ -1,8 +1,9 @@
-// ignore_for_file: file_names
+
 
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,6 +17,7 @@ class HomePageController extends GetxController {
   UserBase? userBase;
   RxBool isTrue = false.obs;
   bool status = false;
+  Timer? timer;
   String? city;
   double? latitude, longtitude;
   CameraPosition? kGooglePlex;
@@ -24,21 +26,23 @@ class HomePageController extends GetxController {
   BitmapDescriptor? startIcon, endIcon, motoIcon;
   GoogleMapController? mapController;
   bool isOnOrder = false, startCourse = false;
-  bool isWithOrder= false;
+  bool isWithOrder = false;
+  double stars=0;
+  List trajet = [] ;
 // bool showCard=false;
   String? orderID;
 
-getWithOrder()async{
-  
- var docSnapshot =
-      await FirebaseFirestore.instance.collection('drivers').doc(userBase!.driver_uid).get();
-        if (docSnapshot.exists) {
-    Map<String, dynamic>? data = docSnapshot.data();
-    isWithOrder= data!['is_on_order']; 
-    update(); 
-        } 
-}
-
+  getWithOrder() async {
+    var docSnapshot = await FirebaseFirestore.instance
+        .collection('drivers')
+        .doc(userBase!.driver_uid)
+        .get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      isWithOrder = data!['is_on_order']; 
+      update();
+    }
+  }
 
   goOnline() async {
     userBase!.is_online = status;
@@ -47,6 +51,8 @@ getWithOrder()async{
         .doc(userBase!.driver_uid)
         .update(userBase!.toJson());
   }
+
+  
 
   getUserLocation() async {
     motoIcon = await BitmapDescriptor.fromAssetImage(
@@ -64,6 +70,7 @@ getWithOrder()async{
         position.latitude, position.longitude,
         localeIdentifier: "fr_FR");
     city = placemarks.first.locality;
+    city= removeDiacritics(city??"");
     userBase!.driver_latitude = latitude!;
     userBase!.driver_longitude = longtitude!;
     kGooglePlex = CameraPosition(
@@ -81,29 +88,33 @@ getWithOrder()async{
       ),
     );
     update();
-    print(longtitude);
-    print(latitude);
   }
 
   updateMyLocation(orderId) {
-    Timer.periodic(
-      Duration(seconds:15), (val)async{
-getUserLocation();
+  
+    timer = Timer.periodic(const Duration(seconds: 3), (val) async {
+      getUserLocation(); 
+  trajet.add({
+    "latitude":latitude,
+    "longitude": longtitude, 
+  }); 
+  userBase!.driver_longitude= longtitude!;
+  userBase!.driver_latitude= latitude!;
+      await FirebaseFirestore.instance
+          .collection('orders')
+          .doc(orderId)
+          .update({
+        'driver': 
+          userBase!.toJson()
+        ,
+        'trajet': FieldValue.arrayUnion(trajet)
+         
+      });
+    });
+  }
 
-await FirebaseFirestore.instance
-        .collection('orders')
-        .doc(orderId)
-        .update(
-          {
-            'order_pickup_time': {
-              'latitude': latitude,
-              'longitude': longtitude,
-            }, 
-          
-          }
-        );
-    }
-    );
+  stopTimer() {
+    timer!.cancel();
   }
 
   setRoad(startLatitude, startLongtitude, endlatitude, endlongtitude) async {
@@ -158,8 +169,11 @@ await FirebaseFirestore.instance
       Colors.red,
     );
     polylines.clear();
-    polylines.addAll([polyline, polylineDriver]); 
+    polylines.addAll([polyline, polylineDriver]);
     update();
+  }
+
+  updateData()async {
   }
 
   @override
@@ -169,9 +183,12 @@ await FirebaseFirestore.instance
       userBase = value;
       status = userBase!.is_online;
       await getUserLocation();
+      
+await saveCurrentUser(userBase!);
     });
-      await getWithOrder();
+    await getWithOrder();
     isTrue.toggle();
+    await updateData();
     // await updateMyLocation();
     update();
   }

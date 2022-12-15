@@ -11,9 +11,9 @@ import 'home_page.dart';
 class OrderInformationController extends GetxController {
   UserBase? userBase;
   RxBool isTrue = false.obs;
-  String? orderId;
-  int startsmean=0;
+  String? orderId; 
   String clientNumber = "";
+  double startsmean=0;
 
   HomePageController contrr= Get.put(HomePageController()); 
 
@@ -47,7 +47,7 @@ var response=await dio.get("https://maps.googleapis.com/maps/api/distancematrix/
         if (docSnapshot.exists) {
     Map<String, dynamic>? data = docSnapshot.data();
     clientNumber= data!['customer_phone_number']; 
-    startsmean= data['customer_stars_mean']; 
+    startsmean= data['customer_note'] / data['customer_total_orders'] ; 
  
     update();
         }

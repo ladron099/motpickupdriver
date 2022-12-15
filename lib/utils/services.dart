@@ -130,34 +130,34 @@ updateFcm() async {
 }
 
 sendNotification(fcm, heading, content) async {
- await  OneSignal.shared.postNotification(
-    OSCreateNotification(
+  await OneSignal.shared.postNotification(OSCreateNotification(
     playerIds: fcm,
     content: content,
     heading: heading,
   ));
 }
-
-
 
 checkIsFirstTime() async {
   final isFirstTime = await SessionManager().get('isFirstTime');
-  if(isFirstTime == null){
+  if (isFirstTime == null) {
     await SessionManager().set("isFirstTime", false);
-    await SessionManager().set("isActiveNotificationDriver",true);
-}
+    await SessionManager().set("isActiveNotificationDriver", true);
+  }
 }
 
-sendPlanifiedNotification(fcm, heading, content, whenDate) async { 
-  DateTime dateTime = DateTime.now(); 
- await  OneSignal.shared.postNotification(
-    OSCreateNotification(
+sendPlanifiedNotification(fcm, heading, content, whenDate) async {
+  DateTime dateTime = DateTime.now();
+  await OneSignal.shared.postNotification(OSCreateNotification(
     playerIds: fcm,
     content: content,
     heading: heading,
-    sendAfter:DateTime(whenDate.year,whenDate.month,whenDate.day,whenDate.hour - int.parse(dateTime.timeZoneName),whenDate.minute,0), 
+    sendAfter: DateTime(
+            whenDate.year,
+            whenDate.month,
+            whenDate.day,
+            whenDate.hour - int.parse(dateTime.timeZoneName),
+            whenDate.minute,
+            0)
+        .subtract(const Duration(minutes: 30)),
   ));
-
 }
-
-

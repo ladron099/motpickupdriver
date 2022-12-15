@@ -2,7 +2,9 @@
 
 import 'package:boxicons/boxicons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diacritic/diacritic.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -136,6 +138,7 @@ class _HomePageState extends State<HomePage> {
                                 width: MediaQuery.of(context).size.width,
                                 color: Colors.transparent,
                                 child: StreamBuilder(
+
                                   stream: FirebaseFirestore.instance
                                       .collection("orders")
                                       .where('order_city',
@@ -147,14 +150,16 @@ class _HomePageState extends State<HomePage> {
                                           isEqualTo: DateFormat('yyyy-MM-dd HH')
                                               .format(DateTime.now()))
                                       .snapshots(),
+  
                                   builder: (context,
                                       AsyncSnapshot<QuerySnapshot> snapshot) {
+                                       print(snapshot.toString());
                                     if (!snapshot.hasData) {
                                       return const Text('');
                                     } else {
                                       if (snapshot.data!.docs.isEmpty) {
                                         return const Text('');
-                                      } else {
+                                      } else { 
                                         return ListView.builder(
                                           physics:
                                               const BouncingScrollPhysics(),
@@ -188,6 +193,8 @@ class _HomePageState extends State<HomePage> {
                                                           'km_radius'] &&
                                                   controller.isWithOrder ==
                                                       false) {
+
+                                                          controller.stars = documentSnapshot['user']['customer_note'] / documentSnapshot['user']['customer_total_orders'] ;
                                                         // controller.showCard=true;
                                                         // controller.update();
                                                 return OrdersCard(
@@ -195,10 +202,10 @@ class _HomePageState extends State<HomePage> {
                                                       "status"],
                                                   photo:
                                                       documentSnapshot["user"]
-                                                          ["user_photo"],
+                                                          ["customer_picture"],
                                                   username:
                                                       documentSnapshot["user"]
-                                                          ["user_name"],
+                                                          ["customer_full_name"],
                                                   orderType: documentSnapshot[
                                                           "order_type"]
                                                       .toString(),
@@ -211,6 +218,7 @@ class _HomePageState extends State<HomePage> {
                                                   drive: controller.userBase!,
                                                   distance: (distance / 1000)
                                                       .toStringAsFixed(2),
+                                                  stars: controller.stars,
                                                   accepte: () async {
                                                     // controller.showCard=false;
                                                     // controller.update();
@@ -303,7 +311,9 @@ class _HomePageState extends State<HomePage> {
                                           final DocumentSnapshot
                                               documentSnapshot =
                                               snapshot.data!.docs[0];
-
+                                               double ttime = double.parse(documentSnapshot['nbre_km_depart_destination']) / 50 < 1 ? double.parse(documentSnapshot['nbre_km_depart_destination']) / 50 *60 : double.parse(documentSnapshot['nbre_km_depart_destination']) / 50 ; 
+   String ttimeText =   double.parse(documentSnapshot['nbre_km_depart_destination']) / 50 < 1 ? ttime.toStringAsFixed(1)+" minutes"   :   ttime.toStringAsFixed(1) + " heures";
+                                  
                                           return Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
@@ -335,7 +345,7 @@ class _HomePageState extends State<HomePage> {
                                                         child: Image.network(
                                                           documentSnapshot[
                                                                   'user']
-                                                              ['user_photo'],
+                                                              ['customer_picture'],
                                                           fit: BoxFit.fill,
                                                         ),
                                                       ),
@@ -352,7 +362,7 @@ class _HomePageState extends State<HomePage> {
                                                         Text(
                                                           documentSnapshot[
                                                                   'user']
-                                                              ['user_name'],
+                                                              ['customer_full_name'],
                                                           style: bodyTextStyle,
                                                         ),
                                                         Text(
@@ -533,7 +543,7 @@ class _HomePageState extends State<HomePage> {
                                                         ),
                                                         10.horizontalSpace,
                                                         Text(
-                                                          '${documentSnapshot['nbre_km_depart_destination']} Km',
+                                                          '${documentSnapshot['nbre_km_depart_destination']} Km   ($ttimeText)',
                                                           style: bodyTextStyle,
                                                         ),
                                                       ],
@@ -566,7 +576,9 @@ class _HomePageState extends State<HomePage> {
                                                             .clear();
                                                         controller.polylines
                                                             .clear();
+                                                        controller.stopTimer();
                                                         controller.update();
+
                                                         // Get.offAll(() =>
                                                         //     const HomePage());
                                                       },
@@ -607,7 +619,11 @@ class _HomePageState extends State<HomePage> {
                                                           controller
                                                                   .isWithOrder =
                                                               false;
-                                                          FirebaseFirestore
+
+                                                         documentSnapshot[
+                                                                          'order_type']
+                                                                      .toString() !=
+                                                                  "0"? FirebaseFirestore
                                                               .instance
                                                               .collection(
                                                                   'drivers')
@@ -615,7 +631,20 @@ class _HomePageState extends State<HomePage> {
                                                                   .userBase!
                                                                   .driver_uid)
                                                               .update({
-                                                            "is_on_order": false
+                                                            "is_on_order": false,
+                                                            "driver_planned_trip": FieldValue.increment(1)
+                                                            
+                                                          }): FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'drivers')
+                                                              .doc(controller
+                                                                  .userBase!
+                                                                  .driver_uid)
+                                                              .update({
+                                                            "is_on_order": false,
+                                                             "driver_planned_delivery": FieldValue.increment(1)
+                                                            
                                                           });
                                                           controller.markers
                                                               .clear();
@@ -623,8 +652,7 @@ class _HomePageState extends State<HomePage> {
                                                               .clear();
                                                           controller.update();
                                                           // Get.offAll(() =>
-                                                          //     const HomePage());
-                                                          print("hello");
+                                                          //     const HomePage()); 
 
                                                            String
                                                                 customer_fcm =
@@ -633,10 +661,7 @@ class _HomePageState extends State<HomePage> {
                                                             String driver_fcm =
                                                                 documentSnapshot[
                                                                     "driver_fcm"];
-                                                                    print(driver_fcm+"ffff");
-                                                                    print(customer_fcm+"ffff");
-                                                                    print(documentSnapshot['order_pickup_time']) ;  
-                                                                    print(DateTime.parse(documentSnapshot['order_pickup_time']))       ;                                                   
+                                                                                                                
                                                              sendPlanifiedNotification([
                                                               customer_fcm
                                                             ], "voyage",
@@ -653,9 +678,9 @@ class _HomePageState extends State<HomePage> {
                                                               .clear();
                                                           controller
                                                               .getUserLocation();
+                                                               await controller.getWithOrder();
                                                           controller.update();
-                                                        } else {
-                                                          print('heello');
+                                                        } else { 
                                                           if (documentSnapshot[
                                                                   'driver_uid'] ==
                                                               controller
@@ -665,26 +690,13 @@ class _HomePageState extends State<HomePage> {
                                                                     .startCourse =
                                                                 true;
 
-                                                            String
-                                                                customer_fcm =
-                                                                documentSnapshot[
-                                                                    "customer_fcm"];
-                                                            String driver_fcm =
-                                                                documentSnapshot[
-                                                                    "driver_fcm"];
-                                                            print('oussama6' +
-                                                                documentSnapshot[
-                                                                    "order_pickup_time"]);
-                                                                    print(documentSnapshot[
-                                                                            "order_pickup_time"]);
-                                                          
-                                                          
-                                                            controller.markers
-                                                                .clear();
-                                                            controller.polylines
-                                                                .clear();
-                                                            controller
-                                                                .getUserLocation();
+                                                            // controller.markers
+                                                            //     .clear();
+                                                            // controller.polylines
+                                                            //     .clear();
+                                                            // controller
+                                                            //     .getUserLocation();
+                                                               await  controller.getWithOrder();
                                                             controller.update();
                                                           }
                                                         }
@@ -732,17 +744,33 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                               
                                               InkWell(
-                                                onTap: () {
+                                                onTap: () async {
                                                   controller.isOnOrder = false;
                                                   controller.isWithOrder =
                                                       false;
-                                                  FirebaseFirestore.instance
+                                                       documentSnapshot[
+                                                                          'order_type']
+                                                                      .toString() !=
+                                                                  "0"
+                                                              ?    FirebaseFirestore.instance
                                                       .collection('drivers')
                                                       .doc(controller
                                                           .userBase!.driver_uid)
                                                       .update({
-                                                    "is_on_order": false
+                                                    "is_on_order": false,
+                                                    "driver_cancelled_trip":FieldValue.increment(1)
+
+                                                  })
+                                                              :    FirebaseFirestore.instance
+                                                      .collection('drivers')
+                                                      .doc(controller
+                                                          .userBase!.driver_uid)
+                                                      .update({
+                                                    "is_on_order": false,
+                                                     "driver_cancelled_delivery":FieldValue.increment(1)
+
                                                   });
+                                               
                                                   String fcm = documentSnapshot[
                                                       "customer_fcm"];
 
@@ -755,7 +783,10 @@ class _HomePageState extends State<HomePage> {
                                                       controller.orderID);
                                                   controller.markers.clear();
                                                   controller.polylines.clear();
+                                                  
                                                   controller.getUserLocation();
+                                                  await controller.getWithOrder();
+                                                  controller.stopTimer();
                                                   controller.update();
                                                 },
                                                 child: Container(
@@ -814,6 +845,9 @@ class _HomePageState extends State<HomePage> {
                                           final DocumentSnapshot
                                               documentSnapshot =
                                               snapshot.data!.docs[0];
+                                               double ttime = double.parse(documentSnapshot['nbre_km_depart_destination']) / 50 < 1 ? double.parse(documentSnapshot['nbre_km_depart_destination']) / 50 *60 : double.parse(documentSnapshot['nbre_km_depart_destination']) / 50 ; 
+   String ttimeText =   double.parse(documentSnapshot['nbre_km_depart_destination']) / 50 < 1 ? ttime.toStringAsFixed(1)+" minutes"   :   ttime.toStringAsFixed(1) + " heures";
+                                  
                                           return Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
@@ -845,7 +879,7 @@ class _HomePageState extends State<HomePage> {
                                                         child: Image.network(
                                                           documentSnapshot[
                                                                   'user']
-                                                              ['user_photo'],
+                                                              ['customer_picture'],
                                                           fit: BoxFit.fill,
                                                         ),
                                                       ),
@@ -862,13 +896,13 @@ class _HomePageState extends State<HomePage> {
                                                         Text(
                                                           documentSnapshot[
                                                                   'user']
-                                                              ['user_name'],
+                                                              ['customer_full_name'],
                                                           style: bodyTextStyle,
                                                         ),
                                                         Text(
                                                           documentSnapshot[
                                                                           'order_type']
-                                                                      .toString() ==
+                                                                      .toString() !=
                                                                   "0"
                                                               ? "Voyage"
                                                               : "Course",
@@ -1043,7 +1077,7 @@ class _HomePageState extends State<HomePage> {
                                                         ),
                                                         10.horizontalSpace,
                                                         Text(
-                                                          '${documentSnapshot['nbre_km_depart_destination']} Km',
+                                                          '${documentSnapshot['nbre_km_depart_destination']} Km   ($ttimeText)',
                                                           style: bodyTextStyle,
                                                         ),
                                                       ],
@@ -1087,7 +1121,7 @@ class _HomePageState extends State<HomePage> {
                                                     documentSnapshot[
                                                             'is_canceled_by_customer']
                                                         ? InkWell(
-                                                            onTap: () {
+                                                            onTap: () async {
                                                               controller
                                                                       .startCourse =
                                                                   false;
@@ -1122,6 +1156,7 @@ class _HomePageState extends State<HomePage> {
                                                                   .clear();
                                                               controller
                                                                   .getUserLocation();
+                                                                await   controller.getWithOrder();
                                                               controller
                                                                   .update();
                                                             },
@@ -1209,6 +1244,7 @@ class _HomePageState extends State<HomePage> {
                                                                         "is_on_order":
                                                                             false
                                                                       });
+                                                                   await   controller.getWithOrder();
                                                                       controller
                                                                           .markers
                                                                           .clear();
@@ -1219,6 +1255,19 @@ class _HomePageState extends State<HomePage> {
                                                                           "order_id",
                                                                           controller
                                                                               .orderID);
+                                                                      await SessionManager().set(
+                                                                          "distance",
+                                                                            Geolocator.distanceBetween(
+                                                      documentSnapshot[
+                                                              "order_pickup_location"]
+                                                          ['latitude'],
+                                                      documentSnapshot[
+                                                              "order_pickup_location"]
+                                                          ['longitude'],
+                                                      controller.latitude!,
+                                                      controller.longtitude!));
+                                                                              controller.stopTimer();
+                                                                              // Get.delete<HomePageController>();
                                                                       Get.offAll(
                                                                           () =>
                                                                               RateClient());

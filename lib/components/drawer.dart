@@ -33,6 +33,15 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
   final padding = const EdgeInsets.symmetric(horizontal: 20);
   @override
   Widget build(BuildContext context) {
+  double starss=0  ;
+  if(widget.currentUser!.driver_total_orders!=0) {
+    starss= widget.currentUser!.driver_note / widget.currentUser!.driver_total_orders;
+  }
+   
+  
+
+print(widget.currentUser!.driver_total_orders);
+print(widget.currentUser!.driver_note);
     return Drawer(
       backgroundColor: Colors.transparent,
       child: Material(
@@ -52,9 +61,9 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
         child: Column(
           children: [
             buildHeader(
-              urlImage: widget.currentUser!.driver_profile_picture,
+              urlImage:   widget.currentUser!.driver_profile_picture,
               name: widget.currentUser!.driver_full_name,
-              stars: widget.currentUser!.driver_stars_mean.round(),
+              stars: starss.round(),
               onClicked: () {},
             ),
             Divider(

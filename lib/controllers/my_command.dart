@@ -7,6 +7,8 @@ import 'package:motopickupdriver/utils/services.dart';
 class MyCommandController extends GetxController {
   UserBase? userBase;
   RxBool isTrue = false.obs;
+  double money = 0;
+  double total_courses = 0;
 
   bool isActiveOne = false, isActiveTwo = true;
   @override

@@ -39,7 +39,9 @@ class UserBase {
   String driver_driving_licence_expiration_date;
   String driver_order_total_amount;
   String driver_anthropometrique;
+  double driver_total_paid;
   String? driver_fcm;
+  int driver_total_orders;
 
 
   UserBase({
@@ -81,7 +83,9 @@ class UserBase {
     required this.driver_driving_licence_expiration_date,
     required this.driver_order_total_amount,
     required this.driver_anthropometrique,
+    required this.driver_total_paid,
     this.driver_fcm,
+    required this.driver_total_orders,
   });
 
   factory UserBase.fromJson(Map<String, dynamic> json) {
@@ -113,8 +117,8 @@ class UserBase {
       driver_cancelled_trip: json['driver_cancelled_trip'],
       driver_succeded_trip: json['driver_succeded_trip'],
       driver_planned_trip: json['driver_planned_trip'],
-      driver_stars_mean: json['driver_stars_mean'],
-      driver_note: json['driver_note'],
+      driver_stars_mean: json['driver_stars_mean'], 
+      driver_note: json['driver_note'].toDouble(),
       driver_motocylces: json['driver_motocylces'],
       driver_identity_card_number: json['driver_identity_card_number'],
       driver_identity_card_picture: json['driver_identity_card_picture'],
@@ -124,9 +128,12 @@ class UserBase {
       driver_driving_licence_picture: json['driver_driving_licence_picture'],
       driver_driving_licence_expiration_date:
           json['driver_driving_licence_expiration_date'],
+      
       driver_order_total_amount: json['driver_order_total_amount'],
       driver_anthropometrique: json['driver_anthropometrique'],
       driver_fcm: json['driver_fcm'],
+      driver_total_orders: json['driver_total_orders']??0,
+      driver_total_paid: json['driver_total_paid'].toDouble()??0.0,
     );
   }
 
@@ -172,6 +179,8 @@ class UserBase {
         'driver_order_total_amount': driver_order_total_amount,
         'driver_anthropometrique': driver_anthropometrique,
         'driver_fcm': driver_fcm,
+        'driver_total_orders': driver_total_orders,
+        'driver_total_paid': driver_total_paid,
       };
 
       

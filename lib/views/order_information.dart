@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -14,6 +15,7 @@ import 'package:motopickupdriver/utils/colors.dart';
 import 'package:motopickupdriver/utils/models/userBase.dart';
 import 'package:motopickupdriver/utils/services.dart';
 import 'package:motopickupdriver/utils/typography.dart';
+import 'package:motopickupdriver/views/rateClient.dart';
 
 import '../utils/queries.dart';
 
@@ -260,254 +262,280 @@ class OrderInformation extends StatelessWidget {
                             ),
                             20.verticalSpace,
                             Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(color: border),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(10.w),
-                                    child: Column(
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(color: border),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(10.w),
+                                child: Column(
+                                  children: [
+                                    Row(
                                       children: [
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              height: 50.h,
-                                              width: 50.h,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(360),
-                                                child: Image.network(
-                                                  documentSnapshot[0]['user'][
-                                                      'user_photo'],
-                                                  fit: BoxFit.cover,
-                                                  loadingBuilder:
-                                                      (BuildContext context,
-                                                          Widget child,
-                                                          ImageChunkEvent?
-                                                              loadingProgress) {
-                                                    if (loadingProgress ==
-                                                        null) {
-                                                      return child;
-                                                    }
-                                                    return Center(
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                        value: loadingProgress
-                                                                    .expectedTotalBytes !=
-                                                                null
-                                                            ? loadingProgress
-                                                                    .cumulativeBytesLoaded /
-                                                                loadingProgress
-                                                                    .expectedTotalBytes!
-                                                            : null,
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
+                                        SizedBox(
+                                          height: 50.h,
+                                          width: 50.h,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(360),
+                                            child: Image.network(
+                                              documentSnapshot[0]['user']
+                                                  ['customer_picture'],
+                                              fit: BoxFit.cover,
+                                              loadingBuilder:
+                                                  (BuildContext context,
+                                                      Widget child,
+                                                      ImageChunkEvent?
+                                                          loadingProgress) {
+                                                if (loadingProgress == null) {
+                                                  return child;
+                                                }
+                                                return Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    value: loadingProgress
+                                                                .expectedTotalBytes !=
+                                                            null
+                                                        ? loadingProgress
+                                                                .cumulativeBytesLoaded /
+                                                            loadingProgress
+                                                                .expectedTotalBytes!
+                                                        : null,
+                                                  ),
+                                                );
+                                              },
                                             ),
-                                            10.horizontalSpace,
-                                            Column(
+                                          ),
+                                        ),
+                                        10.horizontalSpace,
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              documentSnapshot[0]['user']
+                                                  ['customer_full_name'],
+                                              style: bodyTextStyle,
+                                            ),
+                                            5.verticalSpace,
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.center,
                                               children: [
-                                                Text(
-                                                  documentSnapshot[0]['user']
-                                                      ['user_name'],
-                                                  style: bodyTextStyle,
+                                                Icon(
+                                                  controller.startsmean >= 1
+                                                      ? Boxicons.bxs_star
+                                                      : Boxicons.bx_star,
+                                                  color: primary,
+                                                  size: 15.sp,
                                                 ),
-                                                5.verticalSpace,
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Icon(
-                                                      controller.startsmean >=
-                                                              1
-                                                          ? Boxicons.bxs_star
-                                                          : Boxicons.bx_star,
-                                                      color: primary,
-                                                      size: 15.sp,
-                                                    ),
-                                                    Icon(
-                                                      controller.startsmean >=
-                                                              2
-                                                          ? Boxicons.bxs_star
-                                                          : Boxicons.bx_star,
-                                                      color: primary,
-                                                      size: 15.sp,
-                                                    ),
-                                                    Icon(
-                                                       controller.startsmean >=
-                                                              3
-                                                          ? Boxicons.bxs_star
-                                                          : Boxicons.bx_star,
-                                                      color: primary,
-                                                      size: 15.sp,
-                                                    ),
-                                                    Icon(
-                                                       controller.startsmean >=
-                                                              4
-                                                          ? Boxicons.bxs_star
-                                                          : Boxicons.bx_star,
-                                                      color: primary,
-                                                      size: 15.sp,
-                                                    ),
-                                                    Icon(
-                                                      controller.startsmean >=
-                                                              5
-                                                          ? Boxicons.bxs_star
-                                                          : Boxicons.bx_star,
-                                                      color: primary,
-                                                      size: 15.sp,
-                                                    )
-                                                  ],
+                                                Icon(
+                                                  controller.startsmean >= 2
+                                                      ? Boxicons.bxs_star
+                                                      : Boxicons.bx_star,
+                                                  color: primary,
+                                                  size: 15.sp,
+                                                ),
+                                                Icon(
+                                                  controller.startsmean >= 3
+                                                      ? Boxicons.bxs_star
+                                                      : Boxicons.bx_star,
+                                                  color: primary,
+                                                  size: 15.sp,
+                                                ),
+                                                Icon(
+                                                  controller.startsmean >= 4
+                                                      ? Boxicons.bxs_star
+                                                      : Boxicons.bx_star,
+                                                  color: primary,
+                                                  size: 15.sp,
+                                                ),
+                                                Icon(
+                                                  controller.startsmean >= 5
+                                                      ? Boxicons.bxs_star
+                                                      : Boxicons.bx_star,
+                                                  color: primary,
+                                                  size: 15.sp,
                                                 )
                                               ],
-                                            ),
-                                            const Spacer(),
-                                            if (documentSnapshot[0]['status'] !=
-                                                1)
-                                              Container(
-                                                height: 55.w,
-                                                width: 55.w,
-                                                decoration: BoxDecoration(
-                                                  color: primary,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          360),
-                                                ),
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Boxicons.bx_phone,
-                                                    size: 20.sp,
-                                                    color: light,
-                                                  ),
-                                                  onPressed: () {
-                                                    FlutterPhoneDirectCaller
-                                                        .callNumber( controller.clientNumber);
-                                                  },
-                                                ),
-                                              ),
+                                            )
                                           ],
                                         ),
+                                        const Spacer(),
+                                        if (documentSnapshot[0]['status'] != 1)
+                                          Container(
+                                            height: 55.w,
+                                            width: 55.w,
+                                            decoration: BoxDecoration(
+                                              color: primary,
+                                              borderRadius:
+                                                  BorderRadius.circular(360),
+                                            ),
+                                            child: IconButton(
+                                              icon: Icon(
+                                                Boxicons.bx_phone,
+                                                size: 20.sp,
+                                                color: light,
+                                              ),
+                                              onPressed: () {
+                                                FlutterPhoneDirectCaller
+                                                    .callNumber(controller
+                                                        .clientNumber);
+                                              },
+                                            ),
+                                          ),
                                       ],
                                     ),
-                                  ),),
-                  
-                            Spacer(),
-                           documentSnapshot[0]['status']
-                                                   ==
-                                              3? Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 20.h),
-                                  child: PrimaryButton(
-                                    text:   documentSnapshot[0]['is_start']
-                                                   ==
-                                              true?'Finir le Voyage':'Commencer le voyage',
-                                    function: () async { 
-                                      
-                                       if(documentSnapshot[0]['is_start']
-                                                   ==
-                                              false){
-                                                  FirebaseFirestore.instance
-                                          .collection('orders')
-                                          .doc(order['order_id'])
-                                          .update(({
-                                            'is_start': true,
-                                          }));
-                                             FirebaseFirestore.instance
-                                          .collection('orders')
-                                          .doc(order['order_id'])
-                                          .update(({
-                                            'is_start': true,
-                                          }));
-                                                  FirebaseFirestore.instance
-                                          .collection('drivers')
-                                          .doc(documentSnapshot[0]['driver_uid'])
-                                          .update(({
-                                            'is_on_order': true,
-                                          }));
-                                             String fcm = documentSnapshot[0][
-                                                      "customer_fcm"];
-
-                                                   sendNotification(
-                                                                    [fcm],
-                                                                    "voyage a commencée",
-                                                                    "Le chauffeur est en route");
-                                          controller.contrr.isWithOrder=true;
-                                          controller.contrr.update();
-                                              }else{
-                                                  FirebaseFirestore.instance
-                                          .collection('orders')
-                                          .doc(order['order_id'])
-                                          .update(({
-                                            'is_succeed': true,
-                                            'status': 1,
-                                          }));
-                                           FirebaseFirestore.instance
-                                          .collection('drivers')
-                                          .doc(documentSnapshot[0]['driver_uid'])
-                                          .update(({
-                                            'is_on_order': false,
-                                          })); String fcm = documentSnapshot[0][
-                                                      "customer_fcm"];
-                                           sendNotification(
-                                                                          [fcm],
-                                                                          "voyage est finis",
-                                                                          "au revoir");
-                                          controller.contrr.isWithOrder=false;
-                                          controller.contrr.update();
-                                              }
-                                    },
-                                  ),
+                                  ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 20.h),
-                                  child: InkWell(
-                                    onTap: () {
-                                      FirebaseFirestore.instance
-                                          .collection('orders')
-                                          .doc(order['order_id'])
-                                          .update(({
-                                            'is_canceled_by_driver': true,
-                                            'status': 0,
-                                          }));
-                                             String fcm = documentSnapshot[0][
-                                                      "customer_fcm"];
+                              ),
+                            ),
+                            Spacer(),
+                            documentSnapshot[0]['status'] == 3
+                                ? Column(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 20.h),
+                                        child: PrimaryButton(
+                                          text: documentSnapshot[0]
+                                                      ['is_start'] ==
+                                                  true
+                                              ? 'Finir le Voyage'
+                                              : 'Commencer le voyage',
+                                          function: () async {
+                                            if (documentSnapshot[0]
+                                                    ['is_start'] ==
+                                                false) {
+                                          
+                                              
+                                              FirebaseFirestore.instance
+                                                  .collection('drivers')
+                                                  .doc(documentSnapshot[0]
+                                                      ['driver_uid'])
+                                                  .update(({
+                                                    'is_on_order': true,
+                                                  }));
+                                              String fcm = documentSnapshot[0]
+                                                  ["customer_fcm"];
 
-                                                  sendNotification(
-                                                      [fcm],
-                                                      "voyage annulé",
-                                                      "Le chauffeur a annulé le voyage");
-                                      // refuserOrder(widget.drive, order.uid);
-                                    },
-                                    child: Container(
-                                      height: 55.h,
-                                      width: 250.w,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius:
-                                            BorderRadius.circular(360),
-                                      ),
-                                      child: Text(
-                                        'Annuler',
-                                        style: TextStyle(
-                                          fontSize: 15.sp,
-                                          color: Colors.white,
-                                          fontFamily: "LatoSemiBold",
+                                              sendNotification(
+                                                  [fcm],
+                                                  "voyage a commencée",
+                                                  "Le chauffeur est en route");
+                                              controller.contrr.isWithOrder =
+                                                  true;
+                                                      FirebaseFirestore.instance
+                                                  .collection('orders')
+                                                  .doc(order['order_id'])
+                                                  .update(({
+                                                    'is_start': true,
+                                                  }));
+                                              controller.contrr.update();
+                                            } else {
+                                              FirebaseFirestore.instance
+                                                  .collection('orders')
+                                                  .doc(order['order_id'])
+                                                  .update(({
+                                                    'is_succeed': true,
+                                                    'status': 1,
+                                                  }));
+                                              FirebaseFirestore.instance
+                                                  .collection('drivers')
+                                                  .doc(documentSnapshot[0]
+                                                      ['driver_uid'])
+                                                  .update(({
+                                                    'is_on_order': false,
+                                                  }));
+                                              String fcm = documentSnapshot[0]
+                                                  ["customer_fcm"];
+                                              sendNotification(
+                                                  [fcm],
+                                                  "voyage est finis",
+                                                  "au revoir");
+                                              controller.contrr.isWithOrder =
+                                                  false;
+                                              controller.contrr.update();
+                                              await SessionManager().set(
+                                                                          "order_id",
+                                                                          order['order_id']);
+                                                  Get.offAll(
+                                                                          () =>
+                                                                              RateClient());                          
+
+
+                                            }
+                                          },
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ):Container()
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 20.h),
+                                        child: InkWell(
+                                          onTap: () {
+                                            FirebaseFirestore.instance
+                                                .collection('orders')
+                                                .doc(order['order_id'])
+                                                .update(({
+                                                  'is_canceled_by_driver': true,
+                                                  'status': 0,
+                                                }));
+                                            documentSnapshot[0]['order_type']
+                                                        .toString() !=
+                                                    "0"
+                                                ? FirebaseFirestore.instance
+                                                    .collection('drivers')
+                                                    .doc(documentSnapshot[0]
+                                                        ['driver_uid'])
+                                                    .update(({
+                                                      'is_on_order': false,
+                                                      "driver_cancelled_trip":
+                                                          FieldValue.increment(
+                                                              1)
+                                                    }))
+                                                : FirebaseFirestore.instance
+                                                    .collection('drivers')
+                                                    .doc(documentSnapshot[0]
+                                                        ['driver_uid'])
+                                                    .update(({
+                                                      "driver_cancelled_delivery":
+                                                          FieldValue.increment(
+                                                              1),
+                                                      'is_on_order': false,
+                                                    }));
+                                            String fcm = documentSnapshot[0]
+                                                ["customer_fcm"];
+
+                                            sendNotification(
+                                                [fcm],
+                                                "voyage annulé",
+                                                "Le chauffeur a annulé le voyage");
+                                            // refuserOrder(widget.drive, order.uid);
+                                          },
+                                          child: Container(
+                                            height: 55.h,
+                                            width: 250.w,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(360),
+                                            ),
+                                            child: Text(
+                                              'Annuler',
+                                              style: TextStyle(
+                                                fontSize: 15.sp,
+                                                color: Colors.white,
+                                                fontFamily: "LatoSemiBold",
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Container()
                           ],
                         ),
                       );
@@ -515,16 +543,16 @@ class OrderInformation extends StatelessWidget {
                   },
                 )
               : Center(
-                        child: SizedBox(
-                          width: 225.w,
-                          child: const LoadingIndicator(
-                              indicatorType: Indicator.ballScaleMultiple,
-                              colors: [primary],
-                              strokeWidth: 2,
-                              backgroundColor: Colors.transparent,
-                              pathBackgroundColor: Colors.black),
-                        ),
-                      ),
+                  child: SizedBox(
+                    width: 225.w,
+                    child: const LoadingIndicator(
+                        indicatorType: Indicator.ballScaleMultiple,
+                        colors: [primary],
+                        strokeWidth: 2,
+                        backgroundColor: Colors.transparent,
+                        pathBackgroundColor: Colors.black),
+                  ),
+                ),
         ),
       ),
     );
