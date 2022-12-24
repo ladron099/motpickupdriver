@@ -20,19 +20,27 @@ class VerifyIdentityController extends GetxController {
   File? card, licence;
 
   selectImageCard() async {
-    cardFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    try {
+      cardFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (cardFile != null) {
       card = File(cardFile!.path);
       update();
     }
+    } catch (e) {
+     print(e); 
+    }
   }
 
   selectImageLicence() async {
-    cardLicence = await ImagePicker().pickImage(source: ImageSource.gallery);
+   try {
+      cardLicence = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (cardLicence != null) {
       licence = File(cardLicence!.path);
       update();
     }
+   } catch (e) {
+     print(e);
+   }
   }
 
   Future<bool> validat(context) async {

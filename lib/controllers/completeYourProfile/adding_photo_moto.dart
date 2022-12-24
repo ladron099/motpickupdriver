@@ -19,10 +19,14 @@ class AddingPhotoMotoController extends GetxController {
   File? image;
 
   selectImage() async {
-    file = await ImagePicker().pickImage(source: ImageSource.gallery);
+    try{
+      file = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (file != null) {
       image = File(file!.path);
       update();
+    }
+    }catch(e){
+      print(e);
     }
   }
 

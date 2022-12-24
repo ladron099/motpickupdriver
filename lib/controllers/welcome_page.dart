@@ -108,6 +108,7 @@ else{
         });
       } else {
         UserBase userBase = UserBase(
+          driver_reported_times: 0,
           driver_uid: user.uid,
           driver_full_name: user.displayName!,
           driver_email: user.email!,

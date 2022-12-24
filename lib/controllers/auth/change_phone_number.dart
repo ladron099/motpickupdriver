@@ -19,11 +19,11 @@ class ChangePhoneNumberNoAuthController extends GetxController {
   String indicatif = '+212', secondIndicatif = "+212";
 
   chnageIndicatif(value) {
-    indicatif = value;
+    indicatif = value.toString();
   }
 
   chnageSecondIndicatif(value) {
-    secondIndicatif = value;
+    secondIndicatif = value.toString();
   }
 
   Future<bool> validation(context) async {

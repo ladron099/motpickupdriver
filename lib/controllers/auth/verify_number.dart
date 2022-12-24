@@ -74,6 +74,7 @@ class VerfiyNumberController extends GetxController {
         User? user = authResult.user;
         user!.linkWithCredential(emailCredential).then((value) async {
           UserBase userBase = UserBase(
+            driver_reported_times: 0,
             driver_uid: user.uid,
             driver_full_name: '',
             driver_email: tmpUser!.email,

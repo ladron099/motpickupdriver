@@ -17,10 +17,14 @@ class UploadImageController extends GetxController {
   File? image;
 
   selectImage() async {
-    file = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (file != null) {
-      image = File(file!.path);
-      update();
+    try {
+      file = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (file != null) {
+        image = File(file!.path);
+        update();
+      }
+    } catch (e) {
+      print(e);
     }
   }
 

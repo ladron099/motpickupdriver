@@ -42,6 +42,7 @@ class UserBase {
   double driver_total_paid;
   String? driver_fcm;
   int driver_total_orders;
+  int driver_reported_times;
 
 
   UserBase({
@@ -86,6 +87,7 @@ class UserBase {
     required this.driver_total_paid,
     this.driver_fcm,
     required this.driver_total_orders,
+    required this.driver_reported_times
   });
 
   factory UserBase.fromJson(Map<String, dynamic> json) {
@@ -134,6 +136,7 @@ class UserBase {
       driver_fcm: json['driver_fcm'],
       driver_total_orders: json['driver_total_orders']??0,
       driver_total_paid: json['driver_total_paid'].toDouble()??0.0,
+      driver_reported_times: json['driver_reported_times']??0
     );
   }
 
@@ -181,6 +184,7 @@ class UserBase {
         'driver_fcm': driver_fcm,
         'driver_total_orders': driver_total_orders,
         'driver_total_paid': driver_total_paid,
+        'driver_reported_times': driver_reported_times
       };
 
       

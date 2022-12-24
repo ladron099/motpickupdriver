@@ -16,7 +16,7 @@ class ForgotPasswordController extends GetxController {
   String indicatif = '+212';
 
   chnageIndicatif(value) {
-    indicatif = value;
+    indicatif = value.toString();
   }
 
   Future<bool> validate(context) async {

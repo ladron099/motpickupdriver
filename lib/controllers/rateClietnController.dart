@@ -103,11 +103,17 @@ class RateClientController extends GetxController {
     Get.offAll(() => HomePage(), transition: Transition.leftToRight);
   }
 
-  reportDriver() async {
+  reportClient() async {
     await FirebaseFirestore.instance.collection('orders').doc(order_id).update({
       "report_reason_driver": reportInputController.text,
       "is_reported_by_driver": true
     });
+    await FirebaseFirestore.instance
+            .collection('users')
+            .doc(customer_uid)
+            .update({
+            "customer_reported_times": FieldValue.increment(1),
+          });
   }
 
   @override

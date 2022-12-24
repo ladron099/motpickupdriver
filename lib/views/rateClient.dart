@@ -233,7 +233,7 @@ class RateClient extends StatelessWidget {
                                                   TextButton(
                                                       onPressed: () async {
                                                         await controller
-                                                            .reportDriver();
+                                                            .reportClient();
                                                        Get.back();
                                                       },
                                                       child: Text(
