@@ -18,6 +18,7 @@ Future<Widget?> initWidget() async {
   bool isVerified = false, isActivated = false;
   Widget? mainPage;
   bool isLoggedIn = box.read('isLoggedIn') ?? false;
+  print(isLoggedIn);
   if (isLoggedIn) {
     await getCurrentUser().then((value) async {
       isActivated = value!.is_activated_account;

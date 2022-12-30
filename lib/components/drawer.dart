@@ -40,8 +40,7 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
    
   
 
-print(widget.currentUser!.driver_total_orders);
-print(widget.currentUser!.driver_note);
+
     return Drawer(
       backgroundColor: Colors.transparent,
       child: Material(

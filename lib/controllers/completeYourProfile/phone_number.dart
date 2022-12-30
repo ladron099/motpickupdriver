@@ -6,6 +6,7 @@ import 'package:motopickupdriver/utils/alert_dialog.dart';
 import 'package:motopickupdriver/utils/models/userBase.dart';
 import 'package:motopickupdriver/utils/queries.dart';
 import 'package:motopickupdriver/utils/services.dart';
+import 'package:motopickupdriver/views/completeYourProfile/upload_image.dart';
 import 'package:motopickupdriver/views/completeYourProfile/verify_code.dart';
 
 class VerifyPhoneNumberController extends GetxController {
@@ -55,7 +56,16 @@ class VerifyPhoneNumberController extends GetxController {
             codeAutoRetrievalTimeout: (verificationId) async {},
           );
         } else {
-          loading.toggle();
+            if(value =='found-in-users'){
+               loading.toggle();
+        update();
+        userBase!.is_verified_account = true;
+        userBase!.driver_phone_number = indicatif + phone.text;
+        completeUser(userBase!).then((value) {
+          Get.to(() => UploadImage(), transition: Transition.rightToLeft);
+        });
+            }else{
+  loading.toggle();
           update();
           showAlertDialogOneButton(
             context,
@@ -63,6 +73,10 @@ class VerifyPhoneNumberController extends GetxController {
             'Veuillez fournir un autre numéro de téléphone',
             'Ok',
           );
+            }
+
+
+        
         }
       });
     }

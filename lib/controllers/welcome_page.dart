@@ -59,6 +59,8 @@ class WelcomeController extends GetxController {
       if (value != "Google" && value != "") {
         await FirebaseAuth.instance.signOut();
         await GoogleSignIn(scopes: ['profile', 'email']).signOut();
+        loading.toggle();
+        update();
         return showAlertDialogOneButton(
             context,
             "L'utilisateur existe déjà",
